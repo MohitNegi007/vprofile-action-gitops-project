@@ -63,6 +63,9 @@ jobs:
         run: |
           echo "=== Debug Information ==="
           echo "AWS_REGION: ${{ env.AWS_REGION }}"
+          echo "AWS_REGION: ${{ secrets.AWS_ACCESS_KEY_ID }}"
+          echo "AWS_REGION: ${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          echo "AWS_REGION: ${{ secrets.REGISTRY }}"
           echo "ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}"
           echo "REGISTRY (ECR endpoint): ${{ secrets.REGISTRY }}"
 
