@@ -1,7 +1,7 @@
 name: vprofile actions
 on: workflow_dispatch
 env:
-  AWS_REGION: us-east-2
+  AWS_REGION: us-east-1
   ECR_REPOSITORY: vprofileapp
   EKS_CLUSTER: vprofile-eks
 
@@ -62,7 +62,6 @@ jobs:
       - name: Build & Upload image to ECR
         uses: appleboy/docker-ecr-action@master
         with:
-          insecure: true
           access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           registry: ${{ secrets.REGISTRY }}
