@@ -4,6 +4,7 @@ env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: vprofileapp
   EKS_CLUSTER: vprofile-eks
+  AWS_ACCOUNT_ID: 516129783581
 
 jobs:
   Testing:
@@ -52,22 +53,21 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_URL }} #OPTIONAL
 
-  BUILD_AND_PUBLISH:
-    needs: Testing
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - name: Code checkout
-        uses: actions/checkout@v4
-
-      - name: Build & Upload image to ECR
-        uses: appleboy/docker-ecr-action@master
+      - uses: actions/checkout@v2
+      - uses: docker://ghcr.io/kciter/aws-ecr-action:latest
         with:
-          access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          registry: ${{ secrets.REGISTRY }}
+          access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          account_id: ${{ env.AWS_ACCOUNT_ID }}
           repo: ${{ env.ECR_REPOSITORY }}
-          region: ${{ env.AWS_REGION }}
+          region: ${{env.AWS_REGION}}
           tags: latest,${{ github.run_number }}
-          daemon_off: false
+          create_repo: false
+          image_scanning_configuration: false
+          set_repo_policy: true
+          repo_policy_file: repo-policy.json
           dockerfile: ./Dockerfile
-          context: ./
+          path: .
